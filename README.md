@@ -13,15 +13,15 @@ Execute <tt>main</tt> in the <tt>Application</tt> class.
 A swing window opens that shows the blue outline of a madelbrot set.<br>
 On the eastern area of the window a plaintext area shows some data about the settings.
 
-### Buttons
-On the southern area there's a button pane with the following buttons
-
+### Controls
+On the southern area there's a button pane with the following controls
+* colour - a combobox to choose the colouring scheme
 * reset - recover the initial state of the image
-* x-hair toggles the visibility of the green reticle
-* it +5 increases the maximum number of iterations by 5
-* it -5 decreases the maximum number of iterations by 5
-* light +5 is without function
-* light -5 is without function
+* x-hair - toggles the visibility of the green reticle
+* it +5 - increases the maximum number of iterations by 5
+* it -5 - decreases the maximum number of iterations by 5
+* it +1 - increases the maximum number of iterations by 1
+* it -1 - decreases the maximum number of iterations by 1
 
 ### Mouse control
 * Clicking anywhere in the image area centers the image around this point.

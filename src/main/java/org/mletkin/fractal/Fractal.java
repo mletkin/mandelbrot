@@ -13,12 +13,19 @@ import java.util.stream.Stream;
 
 import javax.swing.JPanel;
 
+import org.mletkin.fractal.color.Blue;
+import org.mletkin.fractal.color.ColorMapper;
+import org.mletkin.fractal.color.ColorMapperFactory;
+import org.mletkin.fractal.color.ColorizeBox;
+
 public class Fractal extends JPanel {
 
     private static final Color X_HAIR_COLOR = Color.GREEN;
 
     private Mandelbrot fkt = new Mandelbrot();
     private Consumer<Stream<String>> status = s -> {};
+
+    private ColorMapper cm = new Blue(fkt.getIterations());
 
     private int xMax = getWidth(); // 1500;
     private int yMax = getHeight(); // 1000;
@@ -77,18 +84,12 @@ public class Fractal extends JPanel {
         g.drawLine(0, yMax / 2, xMax, yMax / 2);
     }
 
+    /**
+     * Draw a single point.
+     */
     private void draw(Graphics g, int x, int y) {
-        g.setColor(toColor(fkt.speed(scaleX(x), scaleY(y))));
+        g.setColor(cm.toColor(fkt.speed(scaleX(x), scaleY(y))));
         g.drawRect(x, y, 1, 1);
-    }
-
-    private Color toColor(int woop) {
-        woop *= 256 / Math.min(fkt.getIterations(), 256);
-        int blue = woop % 256;
-        int green = (woop / 256) % 256;
-        int red = (woop / 256 / 256) % 256;
-
-        return new Color(red, green, blue);
     }
 
     private double scaleX(long x) {
@@ -101,12 +102,13 @@ public class Fractal extends JPanel {
 
     public Panel buttonPanel() {
         Panel panel = new Panel();
+        panel.add(new ColorizeBox(this::changeColorizer));
         panel.add(new Button("reset", this::reset));
         panel.add(new Button("x-hair", this::toggleXhair));
         panel.add(new Button("it +5", () -> incIterations(5)));
         panel.add(new Button("it -5", () -> incIterations(-5)));
-        panel.add(new Button("light +5", () -> inclight(5)));
-        panel.add(new Button("light -5", () -> inclight(-5)));
+        panel.add(new Button("it +1", () -> incIterations(1)));
+        panel.add(new Button("it -1", () -> incIterations(-5)));
         return panel;
     }
 
@@ -161,12 +163,17 @@ public class Fractal extends JPanel {
 
     private void incIterations(int n) {
         fkt.setIterations(fkt.getIterations() + n);
+        cm.setIterations(fkt.getIterations());
         repaint();
     }
 
-    private void inclight(int n) {
+    private void incLight(int n) {
         light += n;
         repaint();
     }
 
+    private void changeColorizer(ColorMapperFactory.Cm cm) {
+        this.cm = ColorMapperFactory.make(cm, fkt.getIterations());
+        repaint();
+    }
 }

@@ -16,17 +16,19 @@ On the eastern area of the window a plaintext area shows some data about the set
 ### Controls
 On the southern area there's a button pane with the following controls
 * colour - a combobox to choose the colouring scheme
-* reset - recover the initial state of the image
+* scale - controls the colour brightness, please refer to the code for details
+* iteration increment - a spinner for stting the increment count
+* <tt>+</tt> - increment the iteration count by the spinner value
+* <tt>-</tt> - decrement the iteration count by the spinner value
 * x-hair - toggles the visibility of the green reticle
-* it +5 - increases the maximum number of iterations by 5
-* it -5 - decreases the maximum number of iterations by 5
-* it +1 - increases the maximum number of iterations by 1
-* it -1 - decreases the maximum number of iterations by 1
+* reset - recover the initial state of the image
 
 ### Mouse control
 * Clicking anywhere in the image area centers the image around this point.
 * Scrolling up zooms into the image
 * Scrolling down zooms out of the image
+
+The zoom factor is har wired set to 1.5 and must be greater than one.
 
 The zoom tries to keep the center of the image where it is.
 This is not always accurate, especially when you zoom deep into the image.

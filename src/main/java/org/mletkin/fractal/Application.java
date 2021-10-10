@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import org.mletkin.fractal.front.Status;
+
 public class Application {
 
     public static void main(String[] args) {

@@ -15,8 +15,9 @@ import javax.swing.JPanel;
 
 import org.mletkin.fractal.color.Blue;
 import org.mletkin.fractal.color.ColorMapper;
-import org.mletkin.fractal.color.ColorMapperFactory;
-import org.mletkin.fractal.color.ColorizeBox;
+import org.mletkin.fractal.front.Button;
+import org.mletkin.fractal.front.ColorizePanel;
+import org.mletkin.fractal.front.UpDownPanel;
 
 public class Fractal extends JPanel {
 
@@ -27,8 +28,8 @@ public class Fractal extends JPanel {
 
     private ColorMapper cm = new Blue(fkt.getIterations());
 
-    private int xMax = getWidth(); // 1500;
-    private int yMax = getHeight(); // 1000;
+    private int xMax = getWidth();
+    private int yMax = getHeight();
 
     private long x0 = xMax / 2;
     private long y0 = yMax / 2;
@@ -102,13 +103,10 @@ public class Fractal extends JPanel {
 
     public Panel buttonPanel() {
         Panel panel = new Panel();
-        panel.add(new ColorizeBox(this::changeColorizer));
+        panel.add(new ColorizePanel(fkt::getIterations, this::setColorizer));
+        panel.add(new UpDownPanel(this::incIterations));
         panel.add(new Button("reset", this::reset));
         panel.add(new Button("x-hair", this::toggleXhair));
-        panel.add(new Button("it +5", () -> incIterations(5)));
-        panel.add(new Button("it -5", () -> incIterations(-5)));
-        panel.add(new Button("it +1", () -> incIterations(1)));
-        panel.add(new Button("it -1", () -> incIterations(-5)));
         return panel;
     }
 
@@ -172,8 +170,9 @@ public class Fractal extends JPanel {
         repaint();
     }
 
-    private void changeColorizer(ColorMapperFactory.Cm cm) {
-        this.cm = ColorMapperFactory.make(cm, fkt.getIterations());
+    private void setColorizer(ColorMapper mapper) {
+        this.cm = mapper;
         repaint();
     }
+
 }

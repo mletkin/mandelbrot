@@ -11,8 +11,12 @@ import javax.swing.JComboBox;
  */
 public class ColorizeBox extends JComboBox<ColorMapperFactory.Cm> {
 
-    public ColorizeBox(Consumer<ColorMapperFactory.Cm> action) {
+    public ColorizeBox() {
         super(ColorMapperFactory.Cm.values());
+    }
+
+    public ColorizeBox(Consumer<ColorMapperFactory.Cm> action) {
+        this();
         this.addActionListener(new ActionListener() {
 
             @Override
@@ -22,6 +26,10 @@ public class ColorizeBox extends JComboBox<ColorMapperFactory.Cm> {
                 action.accept(mapper);
             }
         });
+    }
+
+    public ColorMapperFactory.Cm choice() {
+        return (ColorMapperFactory.Cm) getSelectedItem();
     }
 
 }

@@ -18,18 +18,18 @@ public class ColorMapperFactory {
         RedYellowGreen,
     }
 
-    public static ColorMapper make(Cm type, int iterations) {
+    public static ColorMapper make(Cm type, int iterations, boolean scale) {
         switch (type) {
         case Blue:
             return new Blue(iterations);
         case Green:
-            return new CycleList(iterations, Color.GREEN);
+            return new CycleList(iterations, Color.GREEN).scale(scale);
         case BlueRed:
-            return new CycleList(iterations, Color.BLUE, Color.RED);
+            return new CycleList(iterations, Color.BLUE, Color.RED).scale(scale);
         case GreenYellow:
-            return new CycleList(iterations, Color.GREEN, Color.YELLOW);
+            return new CycleList(iterations, Color.GREEN, Color.YELLOW).scale(scale);
         case RedYellowGreen:
-            return new CycleList(iterations, Color.RED, Color.GREEN, Color.YELLOW);
+            return new CycleList(iterations, Color.RED, Color.GREEN, Color.YELLOW).scale(scale);
 
         default:
             return null;

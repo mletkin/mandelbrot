@@ -1,4 +1,4 @@
-package org.mletkin.fractal;
+package org.mletkin.fractal.front;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,11 +7,11 @@ import javax.swing.JButton;
 
 public class Button extends JButton {
 
-    interface Action {
+    public interface Action {
         void act();
     }
 
-    Button(String text, Action action) {
+    public Button(String text, Action action) {
         setText(text);
         addActionListener(new ActionListener() {
 

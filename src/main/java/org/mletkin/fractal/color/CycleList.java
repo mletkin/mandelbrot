@@ -8,15 +8,21 @@ import java.awt.Color;
 public class CycleList extends ColorMapper {
 
     private Color[] list;
+    private boolean scaleColor = false;
 
     public CycleList(int iterations, Color... colors) {
         this.setIterations(iterations);
         this.list = colors;
     }
 
+    public CycleList scale(boolean scale) {
+        scaleColor = scale;
+        return this;
+    }
+
     @Override
     public Color toColor(int woop) {
-        int scaled = woop * 256 / iterations;
+        int scaled = scaleColor ? woop * 256 / iterations : woop % 256;
         Color one = color(scaled);
         return new Color( //
                 scaled(scaled, one.getRed()), //

@@ -1,4 +1,4 @@
-package org.mletkin.fractal;
+package org.mletkin.fractal.front;
 
 import java.util.stream.Stream;
 

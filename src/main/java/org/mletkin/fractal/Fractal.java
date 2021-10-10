@@ -129,12 +129,12 @@ public class Fractal extends JPanel {
     void rescale(boolean in) {
         if (in) {
             delta *= scalingFactor;
-            x0 = (long) ((x0 + xMax / 4) / scalingFactor);
-            y0 = (long) ((y0 + yMax / 4) / scalingFactor);
+            x0 = (long) ((x0 + xMax / 2 * (scalingFactor - 1)) / scalingFactor);
+            y0 = (long) ((y0 + yMax / 2 * (scalingFactor - 1)) / scalingFactor);
         } else {
             delta /= scalingFactor;
-            x0 = (long) (scalingFactor * x0 - xMax / 4);
-            y0 = (long) (scalingFactor * y0 - yMax / 4);
+            x0 = (long) (scalingFactor * x0 - xMax / 2 * (scalingFactor - 1));
+            y0 = (long) (scalingFactor * y0 - yMax / 2 * (scalingFactor - 1));
         }
         repaint();
     }

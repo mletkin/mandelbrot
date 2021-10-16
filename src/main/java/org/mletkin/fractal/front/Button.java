@@ -7,10 +7,6 @@ import javax.swing.JButton;
 
 public class Button extends JButton {
 
-    public interface Action {
-        void act();
-    }
-
     public Button(String text, Action action) {
         setText(text);
         addActionListener(new ActionListener() {

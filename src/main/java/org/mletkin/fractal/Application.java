@@ -3,6 +3,7 @@ package org.mletkin.fractal;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.mletkin.fractal.front.Status;
 
@@ -15,9 +16,18 @@ public class Application {
 
         Status status = new Status();
         Fractal fractal = new Fractal(status::setText);
+        AutoPanel auto = new AutoPanel((s, i) -> {
+            fractal.incIterations(i);
+            fractal.rescale(false, s);
+        });
+
+        JPanel east = new JPanel();
+        east.setLayout(new BorderLayout());
+        east.add(status, BorderLayout.NORTH);
+        east.add(auto, BorderLayout.SOUTH);
 
         frame.add(fractal, BorderLayout.CENTER);
-        frame.add(status, BorderLayout.EAST);
+        frame.add(east, BorderLayout.EAST);
         frame.add(fractal.buttonPanel(), BorderLayout.SOUTH);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

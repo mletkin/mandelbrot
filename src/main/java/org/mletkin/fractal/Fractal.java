@@ -12,6 +12,8 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import org.mletkin.fractal.color.Blue;
 import org.mletkin.fractal.color.ColorMapper;
@@ -26,6 +28,8 @@ public class Fractal extends JPanel {
     private Mandelbrot fkt = new Mandelbrot();
     private Consumer<Stream<String>> status = s -> {};
 
+    private UpDownPanel iterationPanel = new UpDownPanel(this::incIterations);
+    private JSpinner scaleSpinner = new JSpinner(new SpinnerNumberModel(1.1, 0, 5, 0.01));
     private ColorMapper cm = new Blue(fkt.getIterations());
 
     private int xMax = getWidth();
@@ -34,11 +38,9 @@ public class Fractal extends JPanel {
     private long x0 = xMax / 2;
     private long y0 = yMax / 2;
 
-    private double scalingFactor = 1.5;
     private double delta = 1 / 500.0;
 
     private boolean xhair = true;
-    private int light = 0;
 
     public Fractal(Consumer<Stream<String>> status) {
         this.status = status;
@@ -52,7 +54,8 @@ public class Fractal extends JPanel {
         addMouseWheelListener(new MouseAdapter() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                Fractal.this.rescale(e.getPreciseWheelRotation() > 0);
+                Fractal.this.rescale(e.getPreciseWheelRotation() > 0, //
+                        (Double) Fractal.this.scaleSpinner.getValue());
             }
         });
 
@@ -104,9 +107,10 @@ public class Fractal extends JPanel {
     public Panel buttonPanel() {
         Panel panel = new Panel();
         panel.add(new ColorizePanel(fkt::getIterations, this::setColorizer));
-        panel.add(new UpDownPanel(this::incIterations));
+        panel.add(iterationPanel);
         panel.add(new Button("reset", this::reset));
         panel.add(new Button("x-hair", this::toggleXhair));
+        panel.add(scaleSpinner);
         return panel;
     }
 
@@ -116,7 +120,6 @@ public class Fractal extends JPanel {
 
     private void status() {
         status.accept(Stream.of( //
-                "light " + light, //
                 "iterations " + fkt.getIterations(), //
                 "threshold " + fkt.getThreshold(), //
                 "delta: 1/" + 1 / delta, //
@@ -126,7 +129,7 @@ public class Fractal extends JPanel {
         ));
     }
 
-    void rescale(boolean in) {
+    public void rescale(boolean in, double scalingFactor) {
         if (in) {
             delta *= scalingFactor;
             x0 = (long) ((x0 + xMax / 2 * (scalingFactor - 1)) / scalingFactor);
@@ -159,14 +162,9 @@ public class Fractal extends JPanel {
         repaint();
     }
 
-    private void incIterations(int n) {
+    public void incIterations(int n) {
         fkt.setIterations(fkt.getIterations() + n);
         cm.setIterations(fkt.getIterations());
-        repaint();
-    }
-
-    private void incLight(int n) {
-        light += n;
         repaint();
     }
 

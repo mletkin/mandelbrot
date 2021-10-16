@@ -3,8 +3,6 @@ package org.mletkin.fractal;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Panel;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -32,11 +30,8 @@ public class Fractal extends JPanel {
     private JSpinner scaleSpinner = new JSpinner(new SpinnerNumberModel(1.1, 0, 5, 0.01));
     private ColorMapper cm = new Blue(fkt.getIterations());
 
-    private int xMax = getWidth();
-    private int yMax = getHeight();
-
-    private long x0 = xMax / 2;
-    private long y0 = yMax / 2;
+    private long x0 = xMitte();
+    private long y0 = yMitte();
 
     private double delta = 1 / 500.0;
 
@@ -59,20 +54,12 @@ public class Fractal extends JPanel {
             }
         });
 
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                super.componentResized(e);
-                Fractal.this.xMax = e.getComponent().getWidth();
-                Fractal.this.yMax = e.getComponent().getHeight();
-            }
-        });
     }
 
     @Override
     public void paint(Graphics g) {
-        for (int x = 0; x < xMax; x += 2) {
-            for (int y = 0; y < yMax; y += 2) {
+        for (int x = 0; x < getWidth(); x += 2) {
+            for (int y = 0; y < getHeight(); y += 2) {
                 draw(g, x, y);
             }
         }
@@ -84,8 +71,8 @@ public class Fractal extends JPanel {
 
     private void fadenkreuz(Graphics g) {
         g.setColor(X_HAIR_COLOR);
-        g.drawLine(xMax / 2, 0, xMax / 2, yMax);
-        g.drawLine(0, yMax / 2, xMax, yMax / 2);
+        g.drawLine(xMitte(), 0, xMitte(), yMitte() * 2);
+        g.drawLine(0, yMitte(), xMitte() * 2, yMitte());
     }
 
     /**
@@ -122,9 +109,9 @@ public class Fractal extends JPanel {
         status.accept(Stream.of( //
                 "iterations " + fkt.getIterations(), //
                 "threshold " + fkt.getThreshold(), //
-                "delta: 1/" + 1 / delta, //
+                "delta: " + delta, //
                 "top left " + pt(scaleX(0), scaleY(0)), //
-                "center " + pt(scaleX(xMax / 2), scaleY(yMax / 2)), //
+                "center " + pt(scaleX(xMitte()), scaleY(yMitte())), //
                 "x0/y0 " + pt(x0, y0) + "->" + pt(scaleX(x0), scaleY(y0)) //
         ));
     }
@@ -132,28 +119,34 @@ public class Fractal extends JPanel {
     public void rescale(boolean in, double scalingFactor) {
         if (in) {
             delta *= scalingFactor;
-            x0 = (long) ((x0 + xMax / 2 * (scalingFactor - 1)) / scalingFactor);
-            y0 = (long) ((y0 + yMax / 2 * (scalingFactor - 1)) / scalingFactor);
+            x0 = (long) ((x0 + xMitte() * (scalingFactor - 1)) / scalingFactor);
+            y0 = (long) ((y0 + yMitte() * (scalingFactor - 1)) / scalingFactor);
         } else {
             delta /= scalingFactor;
-            x0 = (long) (scalingFactor * x0 - xMax / 2 * (scalingFactor - 1));
-            y0 = (long) (scalingFactor * y0 - yMax / 2 * (scalingFactor - 1));
+            x0 = (long) (scalingFactor * x0 - xMitte() * (scalingFactor - 1));
+            y0 = (long) (scalingFactor * y0 - yMitte() * (scalingFactor - 1));
         }
         repaint();
     }
 
+    private int yMitte() {
+        return getHeight() / 2;
+    }
+
+    private int xMitte() {
+        return getWidth() / 2;
+    }
+
     void recenter(int newX, int newY) {
-        x0 -= newX - xMax / 2;
-        y0 -= newY - yMax / 2;
+        x0 -= newX - xMitte();
+        y0 -= newY - yMitte();
         repaint();
     }
 
     public void reset() {
-        xMax = getWidth();
-        yMax = getHeight();
-        x0 = xMax / 2;
-        y0 = yMax / 2;
-        delta = 1 / (Math.min(xMax, yMax) / 2.0);
+        x0 = xMitte();
+        y0 = yMitte();
+        delta = 1.0 / (Math.min(xMitte(), yMitte()));
         repaint();
     }
 

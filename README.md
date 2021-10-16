@@ -44,6 +44,8 @@ after which the function passed the threshold.<br>
 Currently the image is monochrome with different shades of blue.
 Non divergent points are coloured black.
 
+The "scale" checkbox tries to control the calculation of the colors... It's still experimental.
+
 ## automatic change
 The AutoPanel control group an the right hand side uses a Timer object to redraw the mandelbrot set
 every second. The start/stop-toggle button starts and stops it.<br>

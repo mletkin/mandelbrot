@@ -6,9 +6,12 @@ import java.awt.Panel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -58,15 +61,19 @@ public class Fractal extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        for (int x = 0; x < getWidth(); x += 2) {
-            for (int y = 0; y < getHeight(); y += 2) {
-                draw(g, x, y);
-            }
-        }
+        drawImage(g, getWidth(), getHeight());
         if (xhair) {
             fadenkreuz(g);
         }
         status();
+    }
+
+    private void drawImage(Graphics g, int xMax, int yMax) {
+        for (int x = 0; x < xMax; x += 2) {
+            for (int y = 0; y < yMax; y += 2) {
+                draw(g, x, y);
+            }
+        }
     }
 
     private void fadenkreuz(Graphics g) {
@@ -98,11 +105,8 @@ public class Fractal extends JPanel {
         panel.add(new Button("reset", this::reset));
         panel.add(new Button("x-hair", this::toggleXhair));
         panel.add(scaleSpinner);
+        panel.add(new Button("save", this::savePng));
         return panel;
-    }
-
-    private static String pt(double x, double y) {
-        return String.format("( %5.2f, %5.2f )", x, y);
     }
 
     private void status() {
@@ -110,9 +114,9 @@ public class Fractal extends JPanel {
                 "iterations " + fkt.getIterations(), //
                 "threshold " + fkt.getThreshold(), //
                 "delta: " + delta, //
-                "top left " + pt(scaleX(0), scaleY(0)), //
-                "center " + pt(scaleX(xMitte()), scaleY(yMitte())), //
-                "x0/y0 " + pt(x0, y0) + "->" + pt(scaleX(x0), scaleY(y0)) //
+                "top left " + Util.pt(scaleX(0), scaleY(0)), //
+                "center " + Util.pt(scaleX(xMitte()), scaleY(yMitte())), //
+                "x0/y0 " + Util.pt(x0, y0) + "->" + Util.pt(scaleX(x0), scaleY(y0)) //
         ));
     }
 
@@ -166,4 +170,19 @@ public class Fractal extends JPanel {
         repaint();
     }
 
+    private void savePng() {
+        Util.savePngFile(this, file -> {
+            try {
+                ImageIO.write(createPicture(), "png", file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private BufferedImage createPicture() {
+        BufferedImage bufferedImage = new BufferedImage(xMitte() * 2, yMitte() * 2, BufferedImage.TYPE_INT_RGB);
+        drawImage(bufferedImage.getGraphics(), xMitte() * 2, yMitte() * 2);
+        return bufferedImage;
+    }
 }

@@ -9,6 +9,31 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<version.pmd.plugin>3.13.0</version.pmd.plugin>
 	</properties>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>${version.pmd.plugin}</version>
+				<configuration>
+					<failOnViolation>false</failOnViolation>
+					<printFailingErrors>false</printFailingErrors>
+					<rulesets>
+						<ruleset>http://brix.eule/pmdrules.xml</ruleset>
+					</rulesets>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

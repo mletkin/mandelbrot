@@ -11,6 +11,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<version.pmd.plugin>3.13.0</version.pmd.plugin>
+		<ruleset>${PMD_RULES}</ruleset>
 	</properties>
 
 	<build>
@@ -23,7 +24,7 @@
 					<failOnViolation>false</failOnViolation>
 					<printFailingErrors>false</printFailingErrors>
 					<rulesets>
-						<ruleset>http://brix.eule/pmdrules.xml</ruleset>
+						<ruleset>${ruleset}</ruleset>
 					</rulesets>
 				</configuration>
 				<executions>
